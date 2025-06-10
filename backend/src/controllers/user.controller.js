@@ -99,7 +99,7 @@ export async function acceptFriendRequest(req,res) {
 
         //add each user to the others friend array
          // $addToSet: adds elements to an array only if they do not already exist.
-        await User.findByIdAndUpdate(friendRequest.sendr,{
+        await User.findByIdAndUpdate(friendRequest.sender,{
             $addToSet: {friends: friendRequest.recipient},
         });
 
@@ -111,5 +111,25 @@ export async function acceptFriendRequest(req,res) {
     } catch (error) {
         console.error("Error in acceptFriendRequest controller", error.message);
         res.status(500).json({message: "Internal Server Error"});
+    }
+};
+
+export async function getFriendRequests (req,res) {
+    try {
+       const incomingReqs = await FriendRequest.find({
+        recipient: req.user.id, // current login user
+        status: "pending",
+       }).populate("sender", "fullName profilePic nativeLanguage learningLanguage");
+       
+      const acceptedReqs = await FriendRequest.find({
+        sender: req.user.id, // current user the sender
+        status: "accepted",
+      }).populate("recipient", "fullName profilePic");
+
+      res.status(200).json({incomingReqs, acceptedReqs});
+
+    } catch (error) {
+        console.log("Error in getPendingFriendRequests controller", error.message);
+        res.status(500).json({message:"Internal Server Error"});
     }
 };
