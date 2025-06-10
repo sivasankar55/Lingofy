@@ -1,10 +1,10 @@
  import express from "express";
-import {protectedRoute} from "../middleware/auth.middleware.js";
+import {protectRoute} from "../middleware/auth.middleware.js";
 import { getFriends, getRecommendedUsers, sendFriendRequest, acceptFriendRequest, getFriendRequests, getOutgoingFriendReqs } from "../controllers/user.controller.js";
  const router = express.Router();
 
  //apply auth middleware to all routes
- router.use(protectedRoute);
+ router.use(protectRoute);
 
  router.get("/",getRecommendedUsers);
  router.get("/friends",getFriends);
