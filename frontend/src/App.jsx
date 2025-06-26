@@ -5,6 +5,7 @@ import SignUpPage from "./pages/SignUpPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NotificationsPage from "./pages/NotificationsPage.jsx";
 import CallPage from "./pages/CallPage.jsx";
+import ChatPage from "./pages/ChatPage.jsx";
 import OnboardingPage from "./pages/OnboardingPage.jsx";
 import { Toaster } from "react-hot-toast";
 import PageLoader from "./components/PageLoader.jsx";
@@ -59,7 +60,7 @@ const App = () => {
             ) : (
               <Navigate to = {!isAuthenticated ? "/login" : "/onboarding"} />
             )
-          }
+          }  
         />
 
         <Route
@@ -68,8 +69,14 @@ const App = () => {
         />
 
         <Route
-          path="/call"
-          element={isAuthenticated ? <CallPage /> : <Navigate to="/login" />}
+          path="/chat/:id"
+          element= {isAuthenticated && isOnboarded ? (
+            <Layout showSidebar={false}>
+              <ChatPage/>
+            </Layout>
+          ) : (
+            <Navigate to={!isAuthenticated ? "/login" : "/onboarding"}/>
+          )}
         />
 
         <Route
